@@ -1,14 +1,14 @@
-import pygame
+import pygame 
 import button
 
 pygame.init()
 
 #create game window
 screen_width = 800
-screen_height = 600
-
+screen_height = 450
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Cricket game")
+pygame.display.set_icon('cricketLogo.png')
 
 #game variables
 menu = True
@@ -26,10 +26,10 @@ fieldingSymbol_img = pygame.image.load("fieldingButton.png").convert_alpha()
 settingsSymbol_img = pygame.image.load('settingsButton.png').convert_alpha()
 
 #create button instances
-batting_button = button.Button(8, 130, battingSymbol_img, 1.1)
-bowling_button = button.Button(415, 130, bowlingSymbol_img, 1.1)
-fielding_button = button.Button(8, 360, fieldingSymbol_img, 1.1)
-settings_button = button.Button(415, 360, settingsSymbol_img, 1.1)
+batting_button = button.Button(65, 87, battingSymbol_img, 0.95)
+bowling_button = button.Button(409, 87, bowlingSymbol_img, 0.95)
+fielding_button = button.Button(65, 272, fieldingSymbol_img, 0.95)
+settings_button = button.Button(409, 272, settingsSymbol_img, 0.95)
 
 def draw_text(text, font, text_col, x, y):
   img = font.render(text, True, text_col)
@@ -42,8 +42,8 @@ while running:
 
   screen.fill((0,0,255))
   if menu == True:
-    draw_text("Main Menu", font, text_clr, 280, 5)
-    draw_text("Select an option:", font, text_clr, 210, 50)
+    draw_text("Main Menu", font, text_clr, 280, 0)
+    draw_text("Select an option:", font, text_clr, 210, 32)
 
     if batting_button.draw(screen):
         print("batting")
