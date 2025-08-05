@@ -1,5 +1,6 @@
 import pygame 
 import button
+import fielding
 
 pygame.init()
 
@@ -50,7 +51,7 @@ while running:
     if bowling_button.draw(screen):
         print("bowling")
     if fielding_button.draw(screen):
-        print("fielding")
+        fielding.run_fielding_game(screen)
     if settings_button.draw(screen):
         print("settings")
 
