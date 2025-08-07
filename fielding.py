@@ -37,7 +37,7 @@ class Bird:
         self.rect.x += self.speed
         if self.rect.left > 800:  # reset bird
             self.rect.right = 0
-            self.rect.y = random.randint(50, 150)
+            self.rect.y = random.randint(50, 250)
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
@@ -68,7 +68,7 @@ def run_fielding_game(screen):
         for ball in balls[:]:
             ball.update()
             ball.draw(screen)
-            if ball.rect.top > 450:
+            if ball.rect.bottom > 384:
                 balls.remove(ball)
                 lives -= 1
 
@@ -82,7 +82,7 @@ def run_fielding_game(screen):
 
         # Draw hearts
         for i in range(lives):
-            screen.blit(heart_img, (700 + i * 30, 10))
+            screen.blit(heart_img, (550 + 75*i, 0))
 
         # Event handling
         for event in pygame.event.get():
