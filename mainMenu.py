@@ -9,7 +9,7 @@ screen_width = 800
 screen_height = 450
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Cricket game")
-pygame.display.set_icon(pygame.image.load('cricketLogo.png'))
+pygame.display.set_icon(pygame.image.load('images/cricketLogo.png'))
 
 #game variables
 menu = True
@@ -21,10 +21,10 @@ font = pygame.font.SysFont("arialblack", 40)
 text_clr = 'black'
 
 #load button images
-battingSymbol_img = pygame.image.load("battingButton.png").convert_alpha()
-bowlingSymbol_img = pygame.image.load("bowlingButton.png").convert_alpha()
-fieldingSymbol_img = pygame.image.load("fieldingButton.png").convert_alpha()
-settingsSymbol_img = pygame.image.load('settingsButton.png').convert_alpha()
+battingSymbol_img = pygame.image.load("images/battingButton.png").convert_alpha()
+bowlingSymbol_img = pygame.image.load("images/bowlingButton.png").convert_alpha()
+fieldingSymbol_img = pygame.image.load("images/fieldingButton.png").convert_alpha()
+settingsSymbol_img = pygame.image.load('images/settingsButton.png').convert_alpha()
 
 #create button instances
 batting_button = button.Button(65, 87, battingSymbol_img, 0.95)

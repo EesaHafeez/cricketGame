@@ -2,17 +2,30 @@
 
 import pygame
 import random
+import button
 
-# Load assets (make sure these files exist or use placeholders)
-pitch_img = pygame.image.load("pitch.png")
-ball_img = pygame.image.load("ball.png")
-bird_img = pygame.image.load("bird.png")
-heart_img = pygame.image.load("heart.png")
+# Load assets 
+pitch_img = pygame.image.load("images/pitch.png")
+ball_img = pygame.image.load("images/ball.png")
+bird_img = pygame.image.load("images/bird.png")
+heart_img = pygame.image.load("images/heart.png")
+home_img = pygame.image.load("images/home.png")
+resume_img = pygame.image.load("images/resume.png")
+restart_img = pygame.image.load("images/restart.png")
+pause_img = pygame.image.load("images/pause.png")
+
+# creating button instances
+home_button = button.Button(65, 87, home_img, 0.95)
+resume_button = button.Button(409, 87, resume_img, 0.95)
+restart_button = button.Button(65, 272, restart_img, 0.95)
+pause_button = button.Button(700, 60, pause_img, 0.3)
+
 
 # Constants
 BALL_SPAWN_TIME = 1000  # milliseconds
 BIRD_SPEED = 3
 MAX_LIVES = 3
+
 
 class Ball:
     def __init__(self, x, y, speed):
@@ -45,7 +58,18 @@ class Bird:
 
 def run_fielding_game(screen):
     clock = pygame.time.Clock()
-    font = pygame.font.SysFont("arialblack", 30)
+
+    # game variables
+    game_over = False
+    paused = False
+
+    # define font
+    font = pygame.font.SysFont("arialblack", 40)
+
+    # subroutine to draw text on screen
+    def draw_text(text, font, text_col, x, y):
+        img = font.render(text, True, text_col)
+        screen.blit(img, (x, y))
 
     balls = []
     bird = Bird(y=100)
@@ -56,33 +80,50 @@ def run_fielding_game(screen):
     running = True
     while running:
         screen.blit(pitch_img, (0, 0))
+        if not paused and not game_over:
+            current_time = pygame.time.get_ticks()
+            if current_time - last_ball_time > BALL_SPAWN_TIME:
+                x = random.randint(50, 750)
+                speed = random.randint(3, 7)
+                balls.append(Ball(x, 0, speed))
+                last_ball_time = current_time
 
-        current_time = pygame.time.get_ticks()
-        if current_time - last_ball_time > BALL_SPAWN_TIME:
-            x = random.randint(50, 750)
-            speed = random.randint(3, 7)
-            balls.append(Ball(x, 0, speed))
-            last_ball_time = current_time
+            # Update and draw balls
+            for ball in balls[:]:
+                ball.update()
+                ball.draw(screen)
+                if ball.rect.bottom > 384:
+                    balls.remove(ball)
+                    lives -= 1
 
-        # Update and draw balls
-        for ball in balls[:]:
-            ball.update()
-            ball.draw(screen)
-            if ball.rect.bottom > 384:
-                balls.remove(ball)
-                lives -= 1
+            # Update and draw bird
+            bird.update()
+            bird.draw(screen)
 
-        # Update and draw bird
-        bird.update()
-        bird.draw(screen)
+            # Draw score
+            draw_text(f"Score: {score}", font, 'black', 10, 10)
 
-        # Draw score
-        score_text = font.render(f"Score: {score}", True, "black")
-        screen.blit(score_text, (10, 10))
+            # Draw hearts
+            for i in range(lives):
+                screen.blit(heart_img, (550 + 75*i, 0))
+            if pause_button.draw(screen):
+                paused = True
 
-        # Draw hearts
-        for i in range(lives):
-            screen.blit(heart_img, (550 + 75*i, 0))
+        elif paused:
+            if restart_button.draw(screen):
+                return run_fielding_game(screen)
+            elif home_button.draw(screen):
+                return
+            elif resume_button.draw(screen):
+                paused = False
+
+            elif game_over:
+                draw_text("Game Over!", font, "red", 300, 100)
+                draw_text(f"Final Score: {score}", font, "black", 280, 160)
+                if restart_button.draw(screen):
+                    return run_fielding_game(screen)
+                if home_button.draw(screen):
+                    return
 
         # Event handling
         for event in pygame.event.get():
@@ -103,12 +144,9 @@ def run_fielding_game(screen):
                 if bird.rect.collidepoint(pos):
                     lives -= 1
 
-        if lives <= 0:
-            game_over_text = font.render("Game Over!", True, "red")
-            screen.blit(game_over_text, (300, 200))
-            pygame.display.update()
-            pygame.time.delay(2000)
-            running = False
+        if lives <= 0 and not game_over:
+            game_over = True
+
 
         pygame.display.update()
         clock.tick(60)
