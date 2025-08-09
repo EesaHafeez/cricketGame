@@ -13,7 +13,6 @@ home_img = pygame.image.load("images/home.png")
 resume_img = pygame.image.load("images/resume.png")
 restart_img = pygame.image.load("images/restart.png")
 pause_img = pygame.image.load("images/pause.png")
-blueBox_img = pygame.image.load("images/blueBox.png")
 
 # Creating button instances
 home_button = button.Button(250, 250, home_img, 1)
