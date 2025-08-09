@@ -40,7 +40,6 @@ def draw_text(text, font, text_col, x, y):
 #game loop
 running = True
 while running:
-
   screen.fill((0,0,255))
   if menu == True:
     draw_text("Main Menu", font, text_clr, 280, 0)

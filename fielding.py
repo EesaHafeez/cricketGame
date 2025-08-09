@@ -13,13 +13,13 @@ home_img = pygame.image.load("images/home.png")
 resume_img = pygame.image.load("images/resume.png")
 restart_img = pygame.image.load("images/restart.png")
 pause_img = pygame.image.load("images/pause.png")
+blueBox_img = pygame.image.load("images/blueBox.png")
 
-# creating button instances
-home_button = button.Button(65, 87, home_img, 0.95)
-resume_button = button.Button(409, 87, resume_img, 0.95)
-restart_button = button.Button(65, 272, restart_img, 0.95)
-pause_button = button.Button(700, 60, pause_img, 0.3)
-
+# Creating button instances
+home_button = button.Button(250, 250, home_img, 1)
+resume_button = button.Button(375, 250, resume_img, 1)
+restart_button = button.Button(475, 250, restart_img, 1)
+pause_button = button.Button(720, 20, pause_img, 0.8)
 
 # Constants
 BALL_SPAWN_TIME = 1000  # milliseconds
@@ -59,14 +59,13 @@ class Bird:
 def run_fielding_game(screen):
     clock = pygame.time.Clock()
 
-    # game variables
+    # Game state variables
     game_over = False
     paused = False
 
-    # define font
+    # Font
     font = pygame.font.SysFont("arialblack", 40)
 
-    # subroutine to draw text on screen
     def draw_text(text, font, text_col, x, y):
         img = font.render(text, True, text_col)
         screen.blit(img, (x, y))
@@ -80,6 +79,8 @@ def run_fielding_game(screen):
     running = True
     while running:
         screen.blit(pitch_img, (0, 0))
+
+        # -------------------- GAMEPLAY --------------------
         if not paused and not game_over:
             current_time = pygame.time.get_ticks()
             if current_time - last_ball_time > BALL_SPAWN_TIME:
@@ -105,48 +106,55 @@ def run_fielding_game(screen):
 
             # Draw hearts
             for i in range(lives):
-                screen.blit(heart_img, (550 + 75*i, 0))
+                screen.blit(heart_img, (470 + 75*i, 0))
+
+            # Pause button
             if pause_button.draw(screen):
                 paused = True
 
+        # -------------------- PAUSE MENU --------------------
         elif paused:
+            draw_text("Paused", font, "black", 320, 130)
+            if resume_button.draw(screen):
+                paused = False
             if restart_button.draw(screen):
                 return run_fielding_game(screen)
-            elif home_button.draw(screen):
+            if home_button.draw(screen):
+                pygame.time.delay(200)                
                 return
-            elif resume_button.draw(screen):
-                paused = False
 
-            elif game_over:
-                draw_text("Game Over!", font, "red", 300, 100)
-                draw_text(f"Final Score: {score}", font, "black", 280, 160)
-                if restart_button.draw(screen):
-                    return run_fielding_game(screen)
-                if home_button.draw(screen):
-                    return
+        # -------------------- GAME OVER SCREEN --------------------
+        elif game_over:
+            draw_text("Game Over!", font, "red", 275, 100)
+            draw_text(f"Final Score: {score}", font, "black", 250, 160)
+            if restart_button.draw(screen):
+                return run_fielding_game(screen)
+            if home_button.draw(screen):
+                pygame.time.delay(200)
+                return
 
-        # Event handling
+        # -------------------- EVENT HANDLING --------------------
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and not paused and not game_over:
                 pos = pygame.mouse.get_pos()
-                clicked_ball = False
 
+                # Ball click check
                 for ball in balls[:]:
                     if ball.rect.collidepoint(pos):
                         balls.remove(ball)
                         score += 1
-                        clicked_ball = True
                         break
 
+                # Bird click check
                 if bird.rect.collidepoint(pos):
                     lives -= 1
 
+        # Check for game over
         if lives <= 0 and not game_over:
             game_over = True
-
 
         pygame.display.update()
         clock.tick(60)
