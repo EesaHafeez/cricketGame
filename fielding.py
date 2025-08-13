@@ -1,5 +1,4 @@
 # fielding_game.py
-
 import pygame
 import random
 import button
@@ -20,41 +19,32 @@ resume_button = button.Button(375, 250, resume_img, 1)
 restart_button = button.Button(475, 250, restart_img, 1)
 pause_button = button.Button(720, 20, pause_img, 0.8)
 
-# Constants
-BALL_SPAWN_TIME = 1000  # milliseconds
-BIRD_SPEED = 3
-MAX_LIVES = 3
-
-
+# ball class
 class Ball:
-    def __init__(self, x, y, speed):
+    def __init__(self, x, speed,):
         self.image = ball_img
-        self.rect = self.image.get_rect(center=(x, y))
+        self.rect = self.image.get_rect(center=(x, 0))
         self.speed = speed
 
-    def update(self):
+    def update(self,screen):
         self.rect.y += self.speed
-
-    def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-
+# bird class
 class Bird:
     def __init__(self, y):
         self.image = bird_img
         self.rect = self.image.get_rect(midleft=(0, y))
-        self.speed = BIRD_SPEED
+        self.speed = 3
 
-    def update(self):
+    def update(self,screen):
         self.rect.x += self.speed
         if self.rect.left > 800:  # reset bird
             self.rect.right = 0
             self.rect.y = random.randint(50, 250)
-
-    def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-
+# subroutine to run game
 def run_fielding_game(screen):
     clock = pygame.time.Clock()
 
@@ -65,6 +55,7 @@ def run_fielding_game(screen):
     # Font
     font = pygame.font.SysFont("arialblack", 40)
 
+    # subroutine to draw text
     def draw_text(text, font, text_col, x, y):
         img = font.render(text, True, text_col)
         screen.blit(img, (x, y))
@@ -72,33 +63,34 @@ def run_fielding_game(screen):
     balls = []
     bird = Bird(y=100)
     score = 0
-    lives = MAX_LIVES
+    lives = 3
     last_ball_time = pygame.time.get_ticks()
 
+    # game loop
     running = True
     while running:
         screen.blit(pitch_img, (0, 0))
 
-        # -------------------- GAMEPLAY --------------------
+        # gameplay
         if not paused and not game_over:
             current_time = pygame.time.get_ticks()
-            if current_time - last_ball_time > BALL_SPAWN_TIME:
+            if current_time - last_ball_time > 1000:
+                # dropping another ball
                 x = random.randint(50, 750)
                 speed = random.randint(3, 7)
-                balls.append(Ball(x, 0, speed))
+                balls.append(Ball(x,speed))
                 last_ball_time = current_time
 
             # Update and draw balls
             for ball in balls[:]:
-                ball.update()
-                ball.draw(screen)
+                ball.update(screen)
+                # checking if ball hit the ground
                 if ball.rect.bottom > 384:
                     balls.remove(ball)
                     lives -= 1
 
             # Update and draw bird
-            bird.update()
-            bird.draw(screen)
+            bird.update(screen)
 
             # Draw score
             draw_text(f"Score: {score}", font, 'black', 10, 10)
@@ -111,7 +103,7 @@ def run_fielding_game(screen):
             if pause_button.draw(screen):
                 paused = True
 
-        # -------------------- PAUSE MENU --------------------
+        # paused menu
         elif paused:
             draw_text("Paused", font, "black", 320, 130)
             if resume_button.draw(screen):
@@ -122,7 +114,7 @@ def run_fielding_game(screen):
                 pygame.time.delay(200)                
                 return
 
-        # -------------------- GAME OVER SCREEN --------------------
+        # game over screen
         elif game_over:
             draw_text("Game Over!", font, "red", 275, 100)
             draw_text(f"Final Score: {score}", font, "black", 250, 160)
@@ -131,8 +123,13 @@ def run_fielding_game(screen):
             if home_button.draw(screen):
                 pygame.time.delay(200)
                 return
+            
+        # Check for game over
+        if lives <= 0 and not game_over:
+            game_over = True
 
-        # -------------------- EVENT HANDLING --------------------
+
+        # event handler
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -145,15 +142,13 @@ def run_fielding_game(screen):
                     if ball.rect.collidepoint(pos):
                         balls.remove(ball)
                         score += 1
-                        break
+                    
 
                 # Bird click check
                 if bird.rect.collidepoint(pos):
                     lives -= 1
 
-        # Check for game over
-        if lives <= 0 and not game_over:
-            game_over = True
+
 
         pygame.display.update()
         clock.tick(60)
