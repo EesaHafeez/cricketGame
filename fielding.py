@@ -51,6 +51,7 @@ def run_fielding_game(screen):
     # Game state variables
     game_over = False
     paused = False
+    game_started = False
 
     # Font
     font = pygame.font.SysFont("arialblack", 40)
@@ -64,7 +65,6 @@ def run_fielding_game(screen):
     bird = Bird(y=100)
     score = 0
     lives = 3
-    last_ball_time = pygame.time.get_ticks()
 
     # game loop
     running = True
@@ -72,7 +72,9 @@ def run_fielding_game(screen):
         screen.blit(pitch_img, (0, 0))
 
         # gameplay
-        if not paused and not game_over:
+        if not game_started:
+            draw_text('Press ENTER to start', font, 'black', 200,200)
+        elif not paused and not game_over:
             current_time = pygame.time.get_ticks()
             if current_time - last_ball_time > 1000:
                 # dropping another ball
@@ -112,7 +114,7 @@ def run_fielding_game(screen):
                 return run_fielding_game(screen)
             if home_button.draw(screen):
                 pygame.time.delay(200)                
-                return
+                return 'menu'
 
         # game over screen
         elif game_over:
@@ -122,7 +124,7 @@ def run_fielding_game(screen):
                 return run_fielding_game(screen)
             if home_button.draw(screen):
                 pygame.time.delay(200)
-                return
+                return 'menu'
             
         # Check for game over
         if lives <= 0 and not game_over:
@@ -131,8 +133,14 @@ def run_fielding_game(screen):
 
         # event handler
         for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN and not game_started:
+                if event.key == pygame.K_RETURN:
+                    game_started = True
+                    last_ball_time = pygame.time.get_ticks()  # reset timer
+
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
+                exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN and not paused and not game_over:
                 pos = pygame.mouse.get_pos()
