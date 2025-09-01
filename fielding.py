@@ -53,8 +53,9 @@ def run_fielding_game(screen):
     paused = False
     game_started = False
 
-    # Font
-    font = pygame.font.SysFont("arialblack", 40)
+    # Fonts
+    font_big = pygame.font.SysFont("arialblack", 40)
+    font_small = pygame.font.SysFont("arialblack", 30)
 
     # subroutine to draw text
     def draw_text(text, font, text_col, x, y):
@@ -72,8 +73,10 @@ def run_fielding_game(screen):
         screen.blit(pitch_img, (0, 0))
 
         # gameplay
-        if not game_started:
-            draw_text('Press ENTER to start', font, 'black', 200,200)
+        if not game_started: # added a short explanation and press enter to start game
+            draw_text('Balls will fall from the sky', font_small, 'black', 190,110)
+            draw_text('CLICK on the balls and avoid the birds', font_small, 'black', 110,150)
+            draw_text('Press ENTER to start', font_small, 'black', 230,200)
         elif not paused and not game_over:
             current_time = pygame.time.get_ticks()
             if current_time - last_ball_time > 1000:
@@ -95,7 +98,7 @@ def run_fielding_game(screen):
             bird.update(screen)
 
             # Draw score
-            draw_text(f"Score: {score}", font, 'black', 10, 10)
+            draw_text(f"Score: {score}", font_big, 'black', 10, 10)
 
             # Draw hearts
             for i in range(lives):
@@ -107,7 +110,7 @@ def run_fielding_game(screen):
 
         # paused menu
         elif paused:
-            draw_text("Paused", font, "black", 320, 130)
+            draw_text("Paused", font_big, "black", 320, 130)
             if resume_button.draw(screen):
                 paused = False
             if restart_button.draw(screen):
@@ -118,8 +121,8 @@ def run_fielding_game(screen):
 
         # game over screen
         elif game_over:
-            draw_text("Game Over!", font, "red", 275, 100)
-            draw_text(f"Final Score: {score}", font, "black", 250, 160)
+            draw_text("Game Over!", font_big, "red", 275, 100)
+            draw_text(f"Final Score: {score}", font_big, "black", 250, 160)
             if restart_button.draw(screen):
                 return run_fielding_game(screen)
             if home_button.draw(screen):
@@ -135,8 +138,8 @@ def run_fielding_game(screen):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and not game_started:
                 if event.key == pygame.K_RETURN:
-                    game_started = True
-                    last_ball_time = pygame.time.get_ticks()  # reset timer
+                    game_started = True # start game when enter is pressed
+                    last_ball_time = pygame.time.get_ticks()  # start timer
 
             if event.type == pygame.QUIT:
                 pygame.quit()

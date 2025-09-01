@@ -57,12 +57,12 @@ while running:
 
     elif mode == "bowling":
         result = bowling.run_bowling_game(screen)
-        if result == "menu":   # returned when Home is pressed
+        if result == "menu": # returned when Home is pressed
             mode = "menu"
 
     elif mode == "fielding":
         result = fielding.run_fielding_game(screen)
-        if result == "menu":   # returned when Home is pressed
+        if result == "menu": # returned when Home is pressed
             mode = "menu"
 
     for event in pygame.event.get():
