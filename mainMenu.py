@@ -25,15 +25,16 @@ fieldingSymbol_img = pygame.image.load("images/fieldingButton.png").convert_alph
 settingsSymbol_img = pygame.image.load('images/settingsButton.png').convert_alpha()
 
 # create button instances
-batting_button = button.Button(65, 87, battingSymbol_img, 0.95)
-bowling_button = button.Button(409, 87, bowlingSymbol_img, 0.95)
-fielding_button = button.Button(65, 272, fieldingSymbol_img, 0.95)
-settings_button = button.Button(409, 272, settingsSymbol_img, 0.95)
+batting_button = button.Button(229, 175, battingSymbol_img, 0.95)
+bowling_button = button.Button(571, 175, bowlingSymbol_img, 0.95)
+fielding_button = button.Button(229, 355, fieldingSymbol_img, 0.95)
+settings_button = button.Button(571, 355, settingsSymbol_img, 0.95)
 
 # subroutine to draw text on screen
-def draw_text(text, font, text_col, x, y):
-    img = font.render(text, True, text_col)
-    screen.blit(img, (x, y))
+def draw_text(text, font, color, x, y):
+    img = font.render(text, True, color)
+    rect = img.get_rect(center=(x, y)) # center at (x, y)
+    screen.blit(img, rect)
 
 # game loop
 running = True
@@ -43,8 +44,8 @@ while running:
     screen.fill((0,0,255))
 
     if mode == "menu":
-        draw_text("Main Menu", font, text_clr, 280, 0)
-        draw_text("Select an option:", font, text_clr, 210, 32)
+        draw_text("Main Menu", font, text_clr, 400, 25)
+        draw_text("Select an option:", font, text_clr, 400, 60)
         
         if batting_button.draw(screen):
             print("batting")

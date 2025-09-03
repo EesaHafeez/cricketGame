@@ -14,10 +14,10 @@ restart_img = pygame.image.load("images/restart.png")
 pause_img = pygame.image.load("images/pause.png")
 
 # Creating button instances
-home_button = button.Button(250, 250, home_img, 1)
-resume_button = button.Button(375, 250, resume_img, 1)
-restart_button = button.Button(475, 250, restart_img, 1)
-pause_button = button.Button(720, 20, pause_img, 0.8)
+home_button = button.Button(305, 280, home_img, 1)
+resume_button = button.Button(400, 280, resume_img, 1)
+restart_button = button.Button(495, 280, restart_img, 1)
+pause_button = button.Button(750, 50, pause_img, 0.8)
 
 # ball class
 class Ball:
@@ -57,10 +57,11 @@ def run_fielding_game(screen):
     font_big = pygame.font.SysFont("arialblack", 40)
     font_small = pygame.font.SysFont("arialblack", 30)
 
-    # subroutine to draw text
-    def draw_text(text, font, text_col, x, y):
-        img = font.render(text, True, text_col)
-        screen.blit(img, (x, y))
+    # subroutine to display text
+    def draw_text(text, font, color, x, y):
+        img = font.render(text, True, color)
+        rect = img.get_rect(center=(x, y)) # center at (x, y)
+        screen.blit(img, rect)
 
     balls = []
     bird = Bird(y=100)
@@ -74,9 +75,9 @@ def run_fielding_game(screen):
 
         # gameplay
         if not game_started: # added a short explanation and press enter to start game
-            draw_text('Balls will fall from the sky', font_small, 'black', 190,110)
-            draw_text('CLICK on the balls and avoid the birds', font_small, 'black', 110,150)
-            draw_text('Press ENTER to start', font_small, 'black', 230,200)
+            draw_text('Balls will fall from the sky', font_small, 'black', 400,160)
+            draw_text('CLICK on the balls and avoid the birds', font_small, 'black', 400,200)
+            draw_text('Press ENTER to start', font_small, 'black', 400,240)
         elif not paused and not game_over:
             current_time = pygame.time.get_ticks()
             if current_time - last_ball_time > 1000:
@@ -98,7 +99,7 @@ def run_fielding_game(screen):
             bird.update(screen)
 
             # Draw score
-            draw_text(f"Score: {score}", font_big, 'black', 10, 10)
+            draw_text(f"Score: {score}", font_big, 'black', 100, 35)
 
             # Draw hearts
             for i in range(lives):
@@ -110,7 +111,7 @@ def run_fielding_game(screen):
 
         # paused menu
         elif paused:
-            draw_text("Paused", font_big, "black", 320, 130)
+            draw_text("Paused", font_big, "black", 400, 170)
             if resume_button.draw(screen):
                 paused = False
             if restart_button.draw(screen):
@@ -121,8 +122,8 @@ def run_fielding_game(screen):
 
         # game over screen
         elif game_over:
-            draw_text("Game Over!", font_big, "red", 275, 100)
-            draw_text(f"Final Score: {score}", font_big, "black", 250, 160)
+            draw_text("Game Over!", font_big, "red", 400, 100)
+            draw_text(f"Final Score: {score}", font_big, "black", 400, 160)
             if restart_button.draw(screen):
                 return run_fielding_game(screen)
             if home_button.draw(screen):

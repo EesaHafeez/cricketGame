@@ -12,11 +12,11 @@ restart_img = pygame.image.load("images/restart.png")
 pause_img = pygame.image.load("images/pause.png")
 resume_img = pygame.image.load("images/resume.png")
 
-# Button instances
-home_button = button.Button(250, 250, home_img, 1)
-resume_button = button.Button(375, 250, resume_img, 1)
-restart_button = button.Button(475, 250, restart_img, 1)
-pause_button = button.Button(720, 20, pause_img, 0.8)
+# Creating button instances
+home_button = button.Button(305, 310, home_img, 1)
+resume_button = button.Button(400, 310, resume_img, 1)
+restart_button = button.Button(495, 310, restart_img, 1)
+pause_button = button.Button(750, 50, pause_img, 0.8)
 
 
 def run_bowling_game(screen): # subroutine to run bowling mode
@@ -61,7 +61,8 @@ def run_bowling_game(screen): # subroutine to run bowling mode
     # subroutine to display text
     def draw_text(text, font, color, x, y):
         img = font.render(text, True, color)
-        screen.blit(img, (x, y))
+        rect = img.get_rect(center=(x, y)) # center at (x, y)
+        screen.blit(img, rect)
 
     running = True
     while running:
@@ -75,7 +76,7 @@ def run_bowling_game(screen): # subroutine to run bowling mode
             # stage 1 - set bounce
             if stage == 1:
                 if not disc_frozen:
-                    draw_text("Press SPACE to stop the disc to set bounce:", font_small, 'black', 45, 130)
+                    draw_text("Press SPACE to stop the disc to set bounce:", font_small, 'black', 400, 130)
                     disc_x += disc_speed # make the disc move along
                     if disc_x >= 760: # if disc hits right boundary
                         disc_x = 760
@@ -85,8 +86,8 @@ def run_bowling_game(screen): # subroutine to run bowling mode
                         disc_speed = random.randint(40,60) # reverse the disc direction with random speeds between 15 and 2
                     pygame.draw.circle(screen, "white", (disc_x, 400), 5) # drawing disc
                 else: # if disc frozen
-                    draw_text("Bounce position stored ", font_small, 'black', 210, 110)
-                    draw_text("Press ENTER to continue:", font_small, 'black', 195, 150)
+                    draw_text("Bounce position stored ", font_small, 'black', 400, 110)
+                    draw_text("Press ENTER to continue:", font_small, 'black', 400, 150)
                     pygame.draw.circle(screen, "white", (stored_x_position, 400), 5) # diplaying position of stored disc
 
             # stage 2 - setting speed
@@ -94,15 +95,15 @@ def run_bowling_game(screen): # subroutine to run bowling mode
                 if stage2_start_time is not None: 
                     elapsed = (pygame.time.get_ticks() - stage2_start_time) // 1000 # time passed
                     time_left = max(0, stage2_duration - elapsed) 
-                    draw_text("CLICK as many times as you can: ", font_small, 'black', 120, 120)
-                    draw_text(f"Clicks: {click_count}", font_big, 'blue', 280, 170) # displaying clicks
-                    draw_text(f"Time left: {time_left}", font_big, 'red', 260, 210) # displaying time left
+                    draw_text("CLICK as many times as you can: ", font_small, 'black', 400, 120)
+                    draw_text(f"Clicks: {click_count}", font_big, 'blue', 400, 170) # displaying clicks
+                    draw_text(f"Time left: {time_left}", font_big, 'red', 400, 210) # displaying time left
                     if elapsed >= stage2_duration:
                         ball_pos = [800, 50] # setting starting ball postion for stage 3
                         stage = 3
                 else: # time hasn't started
-                    draw_text("CLICK as many times as you can in 10 seconds", font_small, 'black', 20, 110)
-                    draw_text("Number of clicks will determine your speed", font_small, 'black', 50, 150)
+                    draw_text("CLICK as many times as you can in 10 seconds", font_small, 'black', 400, 110)
+                    draw_text("Number of clicks will determine your speed", font_small, 'black', 400, 150)
 
             # stage 3 - ball delivery
             elif stage == 3:
@@ -157,11 +158,11 @@ def run_bowling_game(screen): # subroutine to run bowling mode
             avg_speed = total_clicks / balls_bowled # calculating average speed
             avg_accuracy = (wickets_hit_count / balls_bowled * 100) # calculating average accuracy
 
-            draw_text("Ball bowled!", font_big, 'red', 260, 35)
-            draw_text(f"Wickets hit: {'YES' if ball_hit_wicket else 'NO'}", font_big, 'blue', 220, 75)
-            draw_text(f"Balls bowled: {balls_bowled}", font_small, 'black', 270, 120)
-            draw_text(f"Average speed: {avg_speed:.1f}", font_small, 'black', 235, 150)
-            draw_text(f"Average accuracy: {avg_accuracy:.1f}%", font_small, 'black', 205, 180)
+            draw_text("Ball bowled!", font_big, 'red', 400, 80)
+            draw_text(f"Wickets hit: {'YES' if ball_hit_wicket else 'NO'}", font_big, 'blue', 400, 120)
+            draw_text(f"Balls bowled: {balls_bowled}", font_small, 'black', 400, 180)
+            draw_text(f"Average speed: {avg_speed:.1f}", font_small, 'black', 400, 210)
+            draw_text(f"Average accuracy: {avg_accuracy:.1f}%", font_small, 'black', 400, 240)
 
             # Buttons
             if restart_button.draw(screen): # if game is restarted
@@ -198,7 +199,7 @@ def run_bowling_game(screen): # subroutine to run bowling mode
 
         # pause menu
         if paused: # if paused
-            draw_text("Paused", font_big, "black", 320, 130)
+            draw_text("Paused", font_big, "black", 400, 170)
             if resume_button.draw(screen): # if resume button pressed
                 pygame.time.delay(150)
                 paused = False
