@@ -13,9 +13,9 @@ pause_img = pygame.image.load("images/pause.png")
 resume_img = pygame.image.load("images/resume.png")
 
 # Creating button instances
-home_button = button.Button(305, 310, home_img, 1)
-resume_button = button.Button(400, 310, resume_img, 1)
-restart_button = button.Button(495, 310, restart_img, 1)
+home_button = button.Button(305, 280, home_img, 1)
+resume_button = button.Button(400, 280, resume_img, 1)
+restart_button = button.Button(495, 280, restart_img, 1)
 pause_button = button.Button(750, 50, pause_img, 0.8)
 
 
@@ -158,11 +158,11 @@ def run_bowling_game(screen): # subroutine to run bowling mode
             avg_speed = total_clicks / balls_bowled # calculating average speed
             avg_accuracy = (wickets_hit_count / balls_bowled * 100) # calculating average accuracy
 
-            draw_text("Ball bowled!", font_big, 'red', 400, 80)
-            draw_text(f"Wickets hit: {'YES' if ball_hit_wicket else 'NO'}", font_big, 'blue', 400, 120)
-            draw_text(f"Balls bowled: {balls_bowled}", font_small, 'black', 400, 180)
-            draw_text(f"Average speed: {avg_speed:.1f}", font_small, 'black', 400, 210)
-            draw_text(f"Average accuracy: {avg_accuracy:.1f}%", font_small, 'black', 400, 240)
+            draw_text("Ball bowled!", font_big, 'red', 400, 50)
+            draw_text(f"Wickets hit: {'YES' if ball_hit_wicket else 'NO'}", font_big, 'blue', 400, 90)
+            draw_text(f"Balls bowled: {balls_bowled}", font_small, 'black', 400, 150)
+            draw_text(f"Average speed: {avg_speed:.1f}", font_small, 'black', 400, 180)
+            draw_text(f"Average accuracy: {avg_accuracy:.1f}%", font_small, 'black', 400, 210)
 
             # Buttons
             if restart_button.draw(screen): # if game is restarted
