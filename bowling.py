@@ -129,7 +129,7 @@ def run_bowling_game(screen): # subroutine to run bowling mode
                     # ratio of ball bounce relative to wickets
                     ratio = (stored_x_position - min_bounce) / (max_bounce - min_bounce)
                     # using bounce ratio to calculate where the ball should end
-                    end_y = bottom_of_wickets - int((bottom_of_wickets) * ratio)
+                    end_y = bottom_of_wickets-30 - int((bottom_of_wickets-30) * ratio)
 
                     dx = end_x - ball_pos[0]
                     dy = end_y - ball_pos[1]
