@@ -80,10 +80,12 @@ def run_bowling_game(screen): # subroutine to run bowling mode
                     disc_x += disc_speed # make the disc move along
                     if disc_x >= 760: # if disc hits right boundary
                         disc_x = 760
-                        disc_speed = -random.randint(40,60) # reverse the disc direction with random speeds between 15 and 20
+                        # reverse the disc direction with random speeds between 15 and 20
+                        disc_speed = -random.randint(40,60) 
                     elif disc_x <= 155: # if disc hits left boundary
                         disc_x = 155
-                        disc_speed = random.randint(40,60) # reverse the disc direction with random speeds between 15 and 2
+                        # reverse the disc direction with random speeds between 15 and 20
+                        disc_speed = random.randint(40,60) 
                     pygame.draw.circle(screen, "white", (disc_x, 400), 5) # drawing disc
                 else: # if disc frozen
                     draw_text("Bounce position stored ", font_small, 'black', 400, 110)
