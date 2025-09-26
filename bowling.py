@@ -155,7 +155,7 @@ def run_bowling_game(screen): # subroutine to run bowling mode
                 pygame.draw.circle(screen, 'white', (int(ball_pos[0]), int(ball_pos[1])), 10) # drawing the ball
 
 
-        # stage 4 - game over screen
+        # game over screen
         elif game_over:
             pygame.draw.circle(screen, 'white', (int(ball_pos[0]), int(ball_pos[1])), 10) # draw final ball pos
             avg_speed = total_clicks / balls_bowled # calculating average speed
