@@ -2,6 +2,7 @@ import pygame
 import button
 import fielding
 import bowling
+import batting
 
 pygame.init()
 
@@ -48,7 +49,7 @@ while running:
         draw_text("Select an option:", font, text_clr, 400, 60)
         
         if batting_button.draw(screen):
-            print("batting")
+            mode = 'batting'
         if bowling_button.draw(screen):
             mode = "bowling"
         if fielding_button.draw(screen):
@@ -65,6 +66,8 @@ while running:
         result = fielding.run_fielding_game(screen)
         if result == "menu": # returned when Home is pressed
             mode = "menu"
+    elif mode == 'batting':
+        result = batting.run_batting_game(screen)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
