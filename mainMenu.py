@@ -68,6 +68,8 @@ while running:
             mode = "menu"
     elif mode == 'batting':
         result = batting.run_batting_game(screen)
+        if result == "menu": # returned when Home is pressed
+            mode = "menu"
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
