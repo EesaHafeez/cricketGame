@@ -1,12 +1,10 @@
 import pygame
 import random
 import math
-import button  # same button module as fielding_game.py
+import button  
 
 def run_batting_game(screen):
     clock = pygame.time.Clock()
-    font = pygame.font.SysFont("arialblack", 30)
-
     # Fonts
     font_big = pygame.font.SysFont("arialblack", 40)
     font_small = pygame.font.SysFont("arialblack", 30)
@@ -33,13 +31,13 @@ def run_batting_game(screen):
     numbers_x = 750
     numbers_y_start = 110
     number_spacing = 50
+    delay_start_time = 0
 
     # Game state
     game_started = False
     paused = False
     game_over = False
     ready_delay = False
-    delay_start_time = 0
 
     # Wickets
     wickets_x = 100
@@ -95,10 +93,10 @@ def run_batting_game(screen):
 
         # start screen
         if not game_started and not ready_delay:
-            draw_text("Get Ready to Bat!", font, "black", 400, 140)
+            draw_text("Get Ready to Bat!", font_small, "black", 400, 140)
             draw_text("Press SPACE at the right time to hit the ball", font_small, "black", 400, 180)
             draw_text("Score runs based on timing — aim for 6!", font_small, "black", 400, 215)
-            draw_text("Press ENTER to start", font, "black", 400, 270)
+            draw_text("Press ENTER to start", font_small, "black", 400, 270)
 
         # pasue before first ball
         elif ready_delay:
@@ -106,7 +104,7 @@ def run_batting_game(screen):
             screen.blit(batsman_img, (175, 250))
 
             for i in range(len(numbers)):
-                draw_text(str(numbers[i]), font, 'black', numbers_x, numbers_y_start + i * number_spacing)
+                draw_text(str(numbers[i]), font_small, 'black', numbers_x, numbers_y_start + i * number_spacing)
 
             rotated_bat, bat_rect = rotate_surface(bat_img, bat_angle)
             screen.blit(rotated_bat, bat_rect)
@@ -124,7 +122,7 @@ def run_batting_game(screen):
             screen.blit(batsman_img, (175, 250))
 
             for i in range(len(numbers)):
-                draw_text(str(numbers[i]), font, 'black', numbers_x, numbers_y_start + i * number_spacing)
+                draw_text(str(numbers[i]), font_small, 'black', numbers_x, numbers_y_start + i * number_spacing)
 
             # Ball logic
             if not ball_hit:
@@ -222,7 +220,7 @@ def run_batting_game(screen):
             screen.blit(rotated_bat, bat_rect)
 
             # Draw score
-            draw_text(f"Score: {score}", font, 'black', 100, 30)
+            draw_text(f"Score: {score}", font_small, 'black', 100, 30)
 
             # Pause button
             if pause_button.draw(screen):
