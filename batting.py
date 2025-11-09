@@ -6,15 +6,16 @@ import button  # same button module as fielding_game.py
 def run_batting_game(screen):
     clock = pygame.time.Clock()
     font = pygame.font.SysFont("arialblack", 30)
-    font_small = pygame.font.SysFont("arialblack", 25)
+
+    # Fonts
+    font_big = pygame.font.SysFont("arialblack", 40)
+    font_small = pygame.font.SysFont("arialblack", 30)
 
     # Load assets
     pitch_img = pygame.image.load("images/pitch.png").convert()
     wickets_img = pygame.image.load("images/wickets.png").convert_alpha()
     batsman_img = pygame.image.load("images/batsman.png").convert_alpha()
     bat_img = pygame.image.load("images/bat.png").convert_alpha()
-
-    # UI images
     home_img = pygame.image.load("images/home.png")
     resume_img = pygame.image.load("images/resume.png")
     restart_img = pygame.image.load("images/restart.png")
@@ -51,7 +52,7 @@ def run_batting_game(screen):
     max_swing = 150
 
     def reset_ball():
-        ball_speed = random.uniform(0.04, 0.07)
+        ball_speed = random.uniform(0.05, 0.075)
         ball_start_y = random.randint(130, 300)
         ball_bounce_x = random.randint(350, 550)
         ball_x = 700
@@ -75,43 +76,41 @@ def run_batting_game(screen):
      ball_end_x, ball_end_y, ball_phase, ball_hit, ball_target_number, t,
      bat_swinged, swinging, ball_speed) = reset_ball()
 
-    # Utility functions
+    # draw text subroutine
     def draw_text(text, font, color, x, y):
         img = font.render(text, True, color)
         rect = img.get_rect(center=(x, y))
         screen.blit(img, rect)
 
-    def rotate_surface(surface, angle, pivot):
+    def rotate_surface(surface, angle):
         rotated_image = pygame.transform.rotate(surface, angle)
-        rect = rotated_image.get_rect(center=pivot)
+        rect = rotated_image.get_rect(center=(170,298))
         return rotated_image, rect
-
-    bat_pivot = pygame.math.Vector2(168, 298)
 
     running = True
     while running:
-        # Always draw pitch + wickets
+        # drawing pitch + wickets
         screen.blit(pitch_img, (0, 0))
         screen.blit(wickets_img, (63, top_of_wickets))
 
-        # --- START SCREEN ---
+        # start screen
         if not game_started and not ready_delay:
             draw_text("Get Ready to Bat!", font, "black", 400, 140)
             draw_text("Press SPACE at the right time to hit the ball", font_small, "black", 400, 180)
             draw_text("Score runs based on timing — aim for 6!", font_small, "black", 400, 215)
             draw_text("Press ENTER to start", font, "black", 400, 270)
 
-        # --- READY DELAY (show full scene) ---
+        # pasue before first ball
         elif ready_delay:
-            # Draw game setup scene (frozen)
+            # draw screen setup
             screen.blit(batsman_img, (175, 250))
 
             for i in range(len(numbers)):
                 draw_text(str(numbers[i]), font, 'black', numbers_x, numbers_y_start + i * number_spacing)
 
-            rotated_bat, bat_rect = rotate_surface(bat_img, bat_angle, bat_pivot)
+            rotated_bat, bat_rect = rotate_surface(bat_img, bat_angle)
             screen.blit(rotated_bat, bat_rect)
-            draw_text(f"Score: {score}", font, 'black', 100, 30)
+            draw_text(f"Score: {score}", font_big, 'black', 100, 35)
             pause_button.draw(screen)
 
 
@@ -120,7 +119,7 @@ def run_batting_game(screen):
                 ready_delay = False
                 game_started = True
 
-        # --- MAIN GAMEPLAY ---
+        # main game
         elif not paused and not game_over:
             screen.blit(batsman_img, (175, 250))
 
@@ -151,7 +150,7 @@ def run_batting_game(screen):
                         game_over = True
 
                 # Collision detection
-                rotated_bat, bat_rect = rotate_surface(bat_img, bat_angle, bat_pivot)
+                rotated_bat, bat_rect = rotate_surface(bat_img, bat_angle)
                 ball_surface = pygame.Surface((20, 20), pygame.SRCALPHA)
                 pygame.draw.circle(ball_surface, (255, 0, 0), (10, 10), 10)
                 ball_mask = pygame.mask.from_surface(ball_surface)
@@ -167,7 +166,7 @@ def run_batting_game(screen):
                         ideal_angle = 55
                         angle_diff = abs(bat_angle - ideal_angle)
                         ideal_distance = 100
-                        bat_distance = math.hypot(ball_x - bat_pivot.x, ball_y - bat_pivot.y)
+                        bat_distance = math.hypot(ball_x - 170, ball_y - 298)
                         distance_diff = abs(bat_distance - ideal_distance)
                         timing_score = (angle_diff * 0.75) + (distance_diff * 0.25)
 
@@ -219,7 +218,7 @@ def run_batting_game(screen):
                     bat_angle -= swing_speed
 
             # Draw bat
-            rotated_bat, bat_rect = rotate_surface(bat_img, bat_angle, bat_pivot)
+            rotated_bat, bat_rect = rotate_surface(bat_img, bat_angle)
             screen.blit(rotated_bat, bat_rect)
 
             # Draw score
@@ -229,9 +228,9 @@ def run_batting_game(screen):
             if pause_button.draw(screen):
                 paused = True
 
-        # --- PAUSE MENU ---
+        # pause menu
         elif paused:
-            draw_text("Paused", font, "black", 400, 170)
+            draw_text("Paused", font_big, "black", 400, 170)
             if resume_button.draw(screen):
                 paused = False
             if restart_button.draw(screen):
@@ -240,17 +239,17 @@ def run_batting_game(screen):
                 pygame.time.delay(200)
                 return 'menu'
 
-        # --- GAME OVER SCREEN ---
+        # game over screen
         elif game_over:
-            draw_text("Game Over!", font, "red", 400, 130)
-            draw_text(f"Final Score: {score}", font, "black", 400, 190)
+            draw_text("Game Over!", font_big, "red", 400, 100)
+            draw_text(f"Final Score: {score}", font_big, "black", 400, 160)
             if restart_button.draw(screen):
                 return run_batting_game(screen)
             if home_button.draw(screen):
                 pygame.time.delay(200)
                 return 'menu'
 
-        # --- EVENT HANDLING ---
+        # event handler
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
