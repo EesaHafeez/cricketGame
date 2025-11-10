@@ -50,7 +50,7 @@ def run_batting_game(screen):
     max_swing = 150
 
     def reset_ball():
-        ball_speed = random.uniform(0.05, 0.075)
+        ball_speed = random.uniform(0.04, 0.08)
         ball_start_y = random.randint(130, 300)
         ball_bounce_x = random.randint(350, 550)
         ball_x = 700
